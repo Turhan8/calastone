@@ -3,11 +3,11 @@
 Fastest way to read a text file.
 https://cc.davelozinski.com/c-sharp/fastest-way-to-read-text-files
 
-# #Assumptions
+# Assumptions
 
 - I have filtered panctuation marks out to make problem simpler. Pantuation marks lose context after filtering anyway.
 
-# #Notes
+# Notes
 
 - Introduces readonly variables for delimiters, punctuation marks and wovels. It maybe a better idea to use repository pattersn for such static data and keep the values in the DB. This will enable runtime changes when needed.
 - I have tested "reading the file" with different input files. Logic of filters is unit tested.
