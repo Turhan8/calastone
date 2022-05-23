@@ -14,17 +14,22 @@ namespace tools
             HashSet<char> wovelLetters = new HashSet<char> { 'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U' };
 
             int n = word.Length;
-            if (n % 2 == 0)
+            if (n >= 1)
             {
-                char middleChar1 = word[n / 2 - 1];
-                char middleChar2 = word[n / 2];
-                return wovelLetters.Contains(middleChar1) && wovelLetters.Contains(middleChar2);
+                if (n % 2 == 0)
+                {
+                    char middleChar1 = word[n / 2 - 1];
+                    char middleChar2 = word[n / 2];
+                    return wovelLetters.Contains(middleChar1) && wovelLetters.Contains(middleChar2);
+                }
+                else
+                {
+                    char middleChar = word[n / 2];
+                    return wovelLetters.Contains(middleChar);
+                }
             }
             else
-            {
-                char middleChar = word[n / 2];
-                return wovelLetters.Contains(middleChar);
-            }
+                return false;
         };
 
         public static Predicate<char> CharIsPanctuationMark = c =>
