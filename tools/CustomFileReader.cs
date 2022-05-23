@@ -11,11 +11,9 @@ namespace tools
     /// </summary>
     public class CustomFileReader : IEnumerable<string>
     {
-        private readonly char[] splitDelimiters = new Char[] { ' ', '.', '?' };
-        private readonly HashSet<char> removeChars = new HashSet<char> { ',', '\'', ':', ';', '!', '(', ')', '`' };
-        private int readBufferSize = 1024;
+        private readonly char[] delimiters = new Char[] { ' ', '.', '?' };
 
-        List<Predicate<string>> wordFilters;
+        private int readBufferSize = 1024;
 
         private string filePath;
 
@@ -24,7 +22,7 @@ namespace tools
         /// </summary>
         /// <param name="path">File path</param>
         /// <param name="bufferSize">Size of the batch,should be greater than 0</param>
-        public CustomFileReader(string path, int bufferSize, List<Predicate<string>> filters)
+        public CustomFileReader(string path, int bufferSize)
         {
             if (File.Exists(path))
                 filePath = path;
@@ -34,9 +32,7 @@ namespace tools
             if (bufferSize > 0)
                 readBufferSize = bufferSize;
             else
-                throw new ArgumentException("Batch size should be greater than Zero", "batchSize");
-
-            wordFilters = filters;
+                throw new ArgumentException($"Buffer size should be greater than zero - {bufferSize}");
         }
 
         // IEnumerable interface
@@ -57,17 +53,15 @@ namespace tools
                 {
                     char[] block = new char[readBufferSize];
                     reader.ReadBlock(block, 0, readBufferSize);
-                    //remove quotation marks
-                    var charsWithoutQuotations = block.Where(c => !FilterFactory.CharIsPanctuationMark(c)).ToArray();
+
                     //make a sentence from chars
-                    string blockString = fragment + new string((charsWithoutQuotations));
+                    string blockString = fragment + new string((block));
                     //split sentences into words 
-                    words = blockString.Split(splitDelimiters);
+                    words = blockString.Split(delimiters);
                     //handle split words at the end
                     fragment = words[words.Length - 1];
 
-                    var filteredWords = words.Take(words.Length - 1).Where(word => !wordFilters.Any(filter => filter(word)));
-
+                    var filteredWords = words.Take(words.Length - 1);
                     foreach (string word in filteredWords)
                         yield return word;
                 }

@@ -20,9 +20,13 @@ namespace textFilter
                 FilterFactory.HasCharSmallT
             };
 
-            var fileReader = new CustomFileReader(filePath, bufferSize, filters);
+            var fileReader = new CustomFileReader(filePath, bufferSize);
 
-            foreach (string word in fileReader)
+            var words = fileReader.ToList();
+
+            var filteredWords = words.Where(word => !filters.Any(filter => filter(word)));
+
+            foreach (string word in filteredWords)
                 Console.Write(word + " ");
             Console.WriteLine();
         }
